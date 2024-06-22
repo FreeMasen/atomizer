@@ -36,9 +36,11 @@ pub enum Args {
     Config {
         /// The provided key will be removed
         #[clap(long, short)]
+        #[arg(conflicts_with("value"))]
         delete: bool,
         /// If a value is provided, the key to assign the value to
         /// if no value is provided print the configuration key's value
+        #[arg(required_if_eq("delete", "true"))]
         key: Option<String>,
         /// The value to assign to the key
         value: Option<String>,

@@ -1,0 +1,8 @@
+{
+    "build": {
+        "path_prefix": "atomizer"
+    },
+    "styles": {
+        "theme": "hacker"
+    }
+}
