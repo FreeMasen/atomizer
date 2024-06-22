@@ -1,0 +1,58 @@
+[package]
+name = "atomizer"
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/FreeMasen/atomizer"
+description = "A terminal Atom feed reader"
+authors = ["Robert Masen <r.f.masen@gmail.com>"]
+homepage = "https://gh.freemasen.com/atomizer"
+license = "MIT"
+
+[package.metadata.wix]
+upgrade-guid = "43693C2F-E406-4353-A2F7-6561183733C4"
+path-guid = "DC990BA1-1B18-4872-87EB-43364BC12E8B"
+license = false
+eula = false
+
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+chrono = { version = "0.4", features = ["serde"] }
+atom_syndication = { version = "0.12", features = ["serde"] }
+html-escape = "0.2.13"
+reqwest = "0.12"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+tokio = { version = "1.20", features = ["full"] }
+toml = "0.8"
+typed-builder = "0.18"
+url = { version = "2.5", features = ["serde"] }
+directories = "5.0"
+log = "0.4"
+dialoguer = "0.11"
+env_logger = "0.11"
+htmd = "0.1"
+pager-rs = "0.3.0"
+
+# The profile that 'cargo dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
+# Config for 'cargo dist'
+[workspace.metadata.dist]
+# The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
+cargo-dist-version = "0.11.1"
+# CI backends to support
+ci = ["github"]
+# The installers to generate for each app
+installers = ["shell", "powershell", "homebrew", "msi"]
+# A GitHub repo to push Homebrew formulas to
+tap = "FreeMasen/homebrew-tap"
+# Target platforms to build apps for (Rust target-triple syntax)
+targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl", "x86_64-pc-windows-msvc"]
+# Publish jobs to run in CI
+publish-jobs = ["homebrew"]
+# Publish jobs to run in CI
+pr-run-mode = "upload"
