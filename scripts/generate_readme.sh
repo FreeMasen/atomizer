@@ -44,7 +44,7 @@ write_line
 
 open_code_fence
 cargo_run_help 
-close_code_fense
+close_code_fence
 
 do_sub_command "read"
 do_sub_command "categories"
