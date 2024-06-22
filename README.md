@@ -20,6 +20,7 @@ Commands:
 
 Options:
   -h, --help  Print help
+```
 
 ### `read`
 
