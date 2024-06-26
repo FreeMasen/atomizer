@@ -1,11 +1,10 @@
-use core::fmt;
-use std::fmt::Write;
+use std::fmt::{self, Write};
 
 use atom_syndication::FixedDateTime;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
 
-use crate::Result;
+use crate::{Error, Result};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Config {
@@ -19,19 +18,17 @@ impl fmt::Display for Config {
 }
 
 impl Config {
-    pub fn report_key(&self, key: &str) -> Result {
+    pub fn key_report(&self, key: &str, f: &mut impl Write) -> Result {
         match key {
             "feeds" => {
-                let mut s = String::new();
-                self.report_feeds(&mut s)?;
-                println!("{s}");
+                self.report_feeds(f)?;
+                Ok(())
             }
             _ => {
-                eprintln!("Unknown key `{key}`");
-                std::process::exit(1);
+                log::warn!("Report unknown key `{key}`");
+                Err(Error::UnknownKey(key.to_string()))
             }
         }
-        Ok(())
     }
 
     fn report_feeds(&self, f: &mut impl Write) -> fmt::Result {
@@ -46,8 +43,8 @@ impl Config {
         match key {
             "feeds" => self.feeds.truncate(0),
             _ => {
-                eprintln!("Unknown key: `{key}`");
-                std::process::exit(1);
+                log::error!("Delete unknown key: `{key}`");
+                return Err(Error::UnknownKey(key.to_string()));
             }
         }
         Ok(())
@@ -60,8 +57,8 @@ impl Config {
                 std::process::exit(1);
             }
             _ => {
-                eprintln!("Unknown key: `{key}`");
-                std::process::exit(1);
+                log::error!("Update unknown key: `{key}`");
+                return Err(Error::UnknownKey(key.to_string()));
             }
         }
     }
@@ -74,4 +71,6 @@ pub struct FeedConfig {
     pub url: Url,
     pub last_updated: FixedDateTime,
     pub read: Vec<String>,
+    #[serde(default)]
+    pub unread_count: usize,
 }
